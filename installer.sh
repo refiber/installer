@@ -14,13 +14,15 @@ if [ -d "$PROJECT_NAME" ]; then
 fi
 
 # Set the base URL for Refiber releases
-REFIBER_URL="https://github.com/refiber/refiber/releases/latest"
+REFIBER_URL="https://github.com/refiber/refiber/releases"
 
 # Download the HTML content of the release page silently
 HTML=$(curl -sL "${REFIBER_URL}")
 
 # Extract the release tag version using grep
-RELEASE_TAG=$(echo "$HTML" | grep -Eo '<title>Release v([^<]*)' | cut -d 'v' -f 2 | cut -d ' ' -f 1)
+RELEASE_TAG=$(echo "$HTML" | grep -Eo '<h2 class="sr-only" id="hd-[^"]+">v([^<]+)' | cut -d 'v' -f 2 | head -n 1)
+
+echo "${RELEASE_TAG}"
 
 # Check if a version was found
 if [ -z "$RELEASE_TAG" ]; then
