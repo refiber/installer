@@ -22,8 +22,6 @@ HTML=$(curl -sL "${REFIBER_URL}")
 # Extract the release tag version using grep
 RELEASE_TAG=$(echo "$HTML" | grep -Eo '<h2 class="sr-only" id="hd-[^"]+">v([^<]+)' | cut -d 'v' -f 2 | head -n 1)
 
-echo "${RELEASE_TAG}"
-
 # Check if a version was found
 if [ -z "$RELEASE_TAG" ]; then
   echo "$(tput setaf 1)Error:$(tput sgr0) Could not find the latest release tag version."
@@ -32,6 +30,10 @@ fi
 
 # Construct the download URL for the tar.gz archive (assuming format)
 DOWNLOAD_URL="https://github.com/refiber/refiber/archive/refs/tags/v${RELEASE_TAG}.tar.gz"
+
+echo -n "    $(tput setaf 8)Downloading the Refiber project template $(tput sgr0)" 
+echo "$(tput setaf 3)v${RELEASE_TAG}$(tput sgr0)"
+echo 
 
 # Download the latest release archive
 curl -L -o "${PROJECT_NAME}".tar.gz "${DOWNLOAD_URL}"
@@ -45,15 +47,15 @@ tar -xf "${PROJECT_NAME}".tar.gz --strip-components 1 -C "${PROJECT_NAME}"
 # Clean up the temporary file
 rm "${PROJECT_NAME}".tar.gz
 
+# Copy .env.example to .env
+cp "./${PROJECT_NAME}/.env.example" "./${PROJECT_NAME}/.env"
+
 echo
 echo -n "    $(tput setaf 2)cd$(tput sgr0)"
 echo " ${PROJECT_NAME}"
 echo
-echo -n "    $(tput setaf 2)npm$(tput sgr0)"
-echo " i"
+echo -n "    $(tput setaf 2)npm$(tput sgr0) i && $(tput setaf 2)npm$(tput sgr0) run build"
 echo
-echo -n "    $(tput setaf 2)npm$(tput sgr0)"
-echo " run build"
 echo
 echo -n "    $(tput setaf 2)air$(tput sgr0)"
 echo
