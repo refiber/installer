@@ -5,6 +5,9 @@ if [ "$1" = "new" ]; then
   # Call the installer script with only the second argument
   shift
   ~/.refiber/installer.sh "$@"
+elif [ "$1" = "update" ]; then 
+  # Call the update script to pull the newest code from the repository.
+  ~/.refiber/update.sh
 else
   echo "$(tput setaf 1)Error:$(tput sgr0) Invalid command. Usage: $(tput bold)refiber new <project-name>$(tput sgr0)"
   exit 1
